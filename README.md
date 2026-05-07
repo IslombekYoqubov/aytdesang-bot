@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🤫 Ayt desang — Anonim Iqror Boti
 
 Telegram anonim xabar boti. Python + aiogram 3 + SQLite.
@@ -198,3 +199,7 @@ sqlite3 ~/aytdesang/aytdesang.db ".tables"
 sqlite3 ~/aytdesang/aytdesang.db "SELECT COUNT(*) FROM users;"
 sqlite3 ~/aytdesang/aytdesang.db "SELECT COUNT(*) FROM messages;"
 ```
+=======
+# aytdesang-bot
+Ayt Desang Bot ni rasmiy GitHub Reposi
+>>>>>>> 69928cc142846cb8ab6f2f0e52df9795765a1705
