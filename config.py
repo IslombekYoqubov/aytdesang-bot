@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
+print(f"Loaded BOT_TOKEN: {'Yes' if BOT_TOKEN else 'No'}")
 BOT_USERNAME: str = os.getenv("BOT_USERNAME", "aytdesang_bot")
 ADMIN_ID: int = int(os.getenv("ADMIN_ID", "0"))
 DB_PATH: str = os.getenv("DB_PATH", "aytdesang.db")
