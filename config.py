@@ -3,22 +3,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
-print(f"Loaded BOT_TOKEN: {'Yes' if BOT_TOKEN else 'No'}")
-BOT_USERNAME: str = os.getenv("BOT_USERNAME", "aytdesang_bot")
-ADMIN_ID: int = int(os.getenv("ADMIN_ID", "0"))
-DB_PATH: str = os.getenv("DB_PATH", "aytdesang.db")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+BOT_USERNAME = os.environ.get("BOT_USERNAME", "aytdesang_bot")
+ADMIN_ID = int(os.environ.get("ADMIN_ID", "0"))
+DB_PATH = os.environ.get("DB_PATH", "aytdesang.db")
 
-TOXIC_WORDS_UZ = [
-    "lanat", "ahmoq", "tentak", "it", "eshak", "svoloch",
-    "blyad", "pizda", "xui", "eblan", "mudak", "zalupa",
-    "ублюдок", "сука", "пиздец",
-]
-
-SHARE_TEXT_TEMPLATE = (
-    "Menga kimdir anonim xabar yozdi… senchi? 👀\n"
-    "https://t.me/{bot_username}?start={user_id}"
-)
-
-MAX_MESSAGE_LENGTH = 500
-MAX_PENDING_MESSAGES = 50
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN mavjud emas!")
