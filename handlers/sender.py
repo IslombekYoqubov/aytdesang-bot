@@ -18,11 +18,14 @@ class SenderState(StatesGroup):
 
 
 def _my_link_kb(user_id: int) -> InlineKeyboardMarkup:
+    if not BOT_USERNAME:  # ← himoya
+        return InlineKeyboardMarkup(inline_keyboard=[])
+    
     bot_link = f"https://t.me/{BOT_USERNAME}?start={user_id}"
     share_url = (
         "https://t.me/share/url"
         f"?url={quote(bot_link, safe='')}"
-        f"&text={quote('Menga anonim yoz 😏', safe='')}"
+        f"&text={quote('Menga anonim yoz', safe='')}"  # ← emoji olib tashlandi
     )
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="📤 Ulashish", url=share_url)],
