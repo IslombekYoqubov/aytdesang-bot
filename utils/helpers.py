@@ -1,17 +1,25 @@
+from urllib.parse import quote
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from config import BOT_USERNAME, SHARE_TEXT_TEMPLATE
+from config import BOT_USERNAME
 
 
-def make_share_text(user_id: int) -> str:
-    return SHARE_TEXT_TEMPLATE.format(bot_username=BOT_USERNAME, user_id=user_id)
+def make_bot_link(user_id: int) -> str:
+    """Returns the raw deep-link URL for the user."""
+    return f"https://t.me/{BOT_USERNAME}?start={user_id}"
+
+
+def make_share_url(user_id: int) -> str:
+    """Returns a t.me/share/url link ready to use as a button URL."""
+    bot_link = make_bot_link(user_id)
+    share_text = quote("Menga anonim yoz 😏")
+    return f"https://t.me/share/url?url={quote(bot_link)}&text={share_text}"
 
 
 def link_keyboard(user_id: int) -> InlineKeyboardMarkup:
-    share_text = make_share_text(user_id)
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text="📤 Storyga / do'stlarga yuborish",
-            url=f"https://t.me/share/url?url={share_text}&text=Menga+anonim+yoz+%F0%9F%98%8F"
+            url=make_share_url(user_id),
         )],
         [InlineKeyboardButton(text="👀 Inboxni ko'rish", callback_data="inbox")],
     ])
@@ -37,10 +45,14 @@ def confirm_send_keyboard() -> InlineKeyboardMarkup:
 
 
 def my_link_keyboard(user_id: int) -> InlineKeyboardMarkup:
-    share_text = make_share_text(user_id)
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text="📤 Ulashish",
-            url=f"https://t.me/share/url?url={share_text}"
+            url=make_share_url(user_id),
         )],
     ])
+
+
+# keep backward compat — some handlers call make_share_text()
+def make_share_text(user_id: int) -> str:
+    return make_bot_link(user_id)
