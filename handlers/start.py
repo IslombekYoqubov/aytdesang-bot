@@ -1,3 +1,6 @@
+from email.utils import quote
+from utils import link_keyboard
+
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart, CommandObject
@@ -8,6 +11,14 @@ from utils import link_keyboard, my_link_keyboard, make_share_text
 from middlewares import contains_toxic
 
 router = Router()
+
+def _make_keyboard(user_id: int) -> InlineKeyboardMarkup:
+    bot_link = f"https://t.me/{BOT_USERNAME}?start={user_id}"
+    share_url = (
+        f"https://t.me/share/url"
+        f"?url={quote(bot_link, safe='')}"   # ← to'liq encode
+        f"&text={quote('Menga anonim yoz 😏', safe='')}"
+    )
 
 
 @router.message(CommandStart(deep_link=False))
