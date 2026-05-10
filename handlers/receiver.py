@@ -81,6 +81,29 @@ async def cb_share(call: CallbackQuery):
         await call.answer("❌ Xabar topilmadi", show_alert=True)
         return
 
+    from utils import make_share_url
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(
+            text="📤 Story / do'stlarga yuborish",
+            url=make_share_url(call.from_user.id),
+        )]
+    ])
+
+    await call.message.answer(
+        f"💌 Menga anonim xabar keldi:\n\n"
+        f"<i>\u201c{msg['text']}\u201d</i>\n\n"
+        f"Senga ham yozishsinmi? 👀",
+        reply_markup=kb,
+        parse_mode="HTML",
+    )
+    await call.answer()
+    msg_id = int(call.data.split(":")[1])
+    msg = await get_message(msg_id)
+
+    if not msg or msg["receiver_id"] != call.from_user.id:
+        await call.answer("❌ Xabar topilmadi", show_alert=True)
+        return
+
     share_url = make_share_text(call.from_user.id)
     share_text = (
         f"💌 Menga anonim xabar keldi:\n\n"
