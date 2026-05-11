@@ -35,6 +35,14 @@ async def init_db():
 
             CREATE INDEX IF NOT EXISTS idx_messages_receiver ON messages(receiver_id);
             CREATE INDEX IF NOT EXISTS idx_messages_sender   ON messages(sender_id);
+            CREATE TABLE IF NOT EXISTS reactions (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                msg_id      INTEGER NOT NULL,
+                reactor_id  INTEGER NOT NULL,
+                emoji       TEXT NOT NULL,
+                created_at  INTEGER DEFAULT (strftime('%s','now')),
+                UNIQUE(msg_id, reactor_id)
+            );
         """)
         await db.commit()
 
@@ -154,3 +162,22 @@ async def get_anon_chat(chat_id: int) -> dict | None:
         ) as cur:
             row = await cur.fetchone()
             return dict(row) if row else None
+async def save_reaction(msg_id: int, reactor_id: int, emoji: str):
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            """INSERT INTO reactions (msg_id, reactor_id, emoji)
+               VALUES (?, ?, ?)
+               ON CONFLICT(msg_id, reactor_id) DO UPDATE SET emoji = excluded.emoji""",
+            (msg_id, reactor_id, emoji),
+        )
+        await db.commit()
+
+
+async def get_reaction(msg_id: int, reactor_id: int) -> str | None:
+    async with aiosqlite.connect(DB_PATH) as db:
+        async with db.execute(
+            "SELECT emoji FROM reactions WHERE msg_id = ? AND reactor_id = ?",
+            (msg_id, reactor_id),
+        ) as cur:
+            row = await cur.fetchone()
+            return row[0] if row else None

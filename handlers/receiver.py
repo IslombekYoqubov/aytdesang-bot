@@ -6,6 +6,7 @@ from aiogram.filters import Command
 
 from config import ADMIN_ID, BOT_USERNAME, DB_PATH
 from database import get_unread_count, get_message, mark_read, upsert_user
+from database import save_reaction, get_reaction, get_message
 
 router = Router()
 
@@ -132,3 +133,35 @@ async def cb_report(call: CallbackQuery):
     await call.message.answer(
         "🚨 Shikoyatingiz adminga yuborildi. Ko'rib chiqiladi."
     )
+
+@router.callback_query(F.data.startswith("react:"))
+async def cb_reaction(call: CallbackQuery):
+    parts = call.data.split(":")
+    msg_id = int(parts[1])
+    emoji = parts[2]
+
+    msg = await get_message(msg_id)
+    if not msg:
+        await call.answer("❌ Xabar topilmadi", show_alert=True)
+        return
+
+    # Oldingi reactionni tekshirish
+    old = await get_reaction(msg_id, call.from_user.id)
+    if old == emoji:
+        await call.answer(f"Siz allaqachon {emoji} reaksiya qoldirdingiz!", show_alert=True)
+        return
+
+    await save_reaction(msg_id, call.from_user.id, emoji)
+    await call.answer(f"{emoji} reaksiya yuborildi!")
+
+    # Xabar yuboruvchisiga bildirish
+    if msg["sender_id"]:
+        try:
+            await call.bot.send_message(
+                msg["sender_id"],
+                f"🎉 Xabaringizga <b>{emoji}</b> reaksiya keldi!\n\n"
+                f"<i>«{msg['text']}»</i>",
+                parse_mode="HTML",
+            )
+        except Exception:
+            pass

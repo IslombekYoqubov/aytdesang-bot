@@ -24,14 +24,18 @@ def link_keyboard(user_id: int) -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="👀 Inboxni ko'rish", callback_data="inbox")],
     ])
 
-
 def message_keyboard(msg_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="💬 Anonim javob", callback_data=f"reply:{msg_id}"),
-            InlineKeyboardButton(text="📤 Ulashish", callback_data=f"share:{msg_id}"),
+            InlineKeyboardButton(text="❤️", callback_data=f"react:{msg_id}:❤️"),
+            InlineKeyboardButton(text="😂", callback_data=f"react:{msg_id}:😂"),
+            InlineKeyboardButton(text="😮", callback_data=f"react:{msg_id}:😮"),
+            InlineKeyboardButton(text="🔥", callback_data=f"react:{msg_id}:🔥"),
         ],
-        [InlineKeyboardButton(text="🚨 Shikoyat", callback_data=f"report:{msg_id}")],
+        [
+            InlineKeyboardButton(text="📤 Ulashish", callback_data=f"share:{msg_id}"),
+            InlineKeyboardButton(text="🚨 Shikoyat", callback_data=f"report:{msg_id}"),
+        ],
     ])
 
 
