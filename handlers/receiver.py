@@ -38,12 +38,17 @@ def _inbox_kb(user_id: int) -> InlineKeyboardMarkup:
 def _msg_kb(msg_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [
+            InlineKeyboardButton(text="❤️", callback_data=f"react:{msg_id}:❤️"),
+            InlineKeyboardButton(text="😂", callback_data=f"react:{msg_id}:😂"),
+            InlineKeyboardButton(text="😮", callback_data=f"react:{msg_id}:😮"),
+            InlineKeyboardButton(text="🔥", callback_data=f"react:{msg_id}:🔥"),
+        ],
+        [
             InlineKeyboardButton(text="💬 Anonim javob", callback_data=f"reply:{msg_id}"),
             InlineKeyboardButton(text="📤 Ulashish", callback_data=f"share:{msg_id}"),
         ],
         [InlineKeyboardButton(text="🚨 Shikoyat", callback_data=f"report:{msg_id}")],
     ])
-
 
 @router.message(Command("inbox"))
 async def cmd_inbox(message: Message):
